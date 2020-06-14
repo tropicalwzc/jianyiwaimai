@@ -1,0 +1,230 @@
+<head>
+    <meta charset="utf-8">
+    <title>简易外卖账户查询</title>
+    <link href="styles/style.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+
+    </style>
+</head>
+
+<h1>
+    商家管理系统
+</h1>
+<h2>
+    <button onclick="login_shop()">登录</button>
+    <button onclick="new_shop()">注册</button>
+    <input id="input" type="text" />
+    <button onclick="send()">搜索</button>
+    <button onclick="showall()">显示全部</button>
+</h2>
+
+<h2>
+    <pre id="output"></pre>
+</h2>
+
+<body>
+    <HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+    <h2 id="shopname">未登录</h2>
+    <HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+    <table border="0" cellspacing="0" cellpadding="0" id="shopnametable" align="center" width="60%" class="table">
+
+    </table>
+    <HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+    <table border="0" cellspacing="0" cellpadding="0" id="shopfoodtable" align="center" width="60%" class="table">
+
+    </table>
+    <HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+
+</body>
+<h2>
+    <button onclick="newfood()">添加新套餐</button>
+    <HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+</h2>
+<script>
+    var serverip = "192.168.123.143"
+    var input = document.getElementById("input");
+    var output = document.getElementById("output");
+    var socket = new WebSocket("ws://" + serverip + ":8080/echo");
+    var rest_id = ""
+    var timename = setInterval("flushpage();", 5000);
+    const category = "restaurant "
+    socket.onopen = function () {
+        //output.innerHTML += "Status: Connected\n";
+    };
+
+    socket.onmessage = function (acc) {
+        //output.innerHTML += "Server: " + e.data + "\n";
+        splitter = acc.data.split("|")
+        var e = splitter[1]
+        var optional = splitter[0]
+        if (optional == "rest_search") {
+            var per = e.split("\n")
+            if (per == "") {
+                pass = false
+            }
+            else {
+                pass = true
+                var table = document.getElementById("shopnametable");
+                var heads = new Array("店名", "余额", "VIP", "商家ID", "地址", "电话")
+                cleartable(table)
+                filltable(table, heads, per)
+                var alldt = getTableContent("shopnametable")
+                var usrdisplay = document.getElementById("shopname")
+                usrdisplay.innerText = alldt[1][0]
+                socket.send("restaurant foodlist " + rest_id) // 更新列表
+            }
+        }
+        else if (optional == "rest_foodlist") {
+            var per = e.split("\n")
+            var table = document.getElementById("shopfoodtable");
+            var heads = new Array("套餐ID", "套餐名称", "价格")
+            cleartable(table)
+            filltable_with_orderbtn(table, heads, per)
+        }
+    }
+
+    function filltable(table, heads, per) {
+        var headtr = document.createElement("tr");
+        for (var j = 0; j < heads.length; j++) {
+            var th = document.createElement("th");
+            var headtt = document.createTextNode(heads[j])
+            th.append(headtt)
+            headtr.append(th)
+        }
+
+        table.append(headtr)
+
+        for (var i = 0; i < per.length - 1; i++) {
+            var tr = document.createElement("tr");
+
+            var words = per[i].split("+")
+            for (var j = 0; j < words.length; j++) {
+                var td = document.createElement("td");
+                var nowtxt = words[j]
+                var tt = document.createTextNode(nowtxt)
+                td.appendChild(tt);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        table.setAttribute("border", 1);
+    }
+    function login_shop() {
+        rest_id = prompt("输入店家ID")
+        socket.send("restaurant search " + rest_id)
+    }
+    function flushpage() {
+        socket.send("restaurant search " + rest_id)
+    }
+    function new_shop() {
+        //newrid string, newname string, newaddr string, newphone string, newaid string
+        newrid = prompt("请注册一个商家ID")
+        newname = prompt("输入店铺名字")
+        newaddr = prompt("请输入你的店铺地址")
+        newphone = prompt("请输入店铺联系电话")
+        newaid = prompt("请输入店铺关联的账号")
+        socket.send("restaurant new " + newrid + " " + newname + " " + newaddr + " " + newphone + " " + newaid)
+        alert("注册完成! 输入" + newrid + "来进行登录")
+    }
+    function newfood() {
+        if (pass == true) {
+            var foodname = prompt("请输入新套餐的名称")
+            var foodprice = prompt("请输入新套餐的价格")
+            socket.send("food new " + foodname + " " + foodprice + " " + rest_id)
+            socket.send("restaurant foodlist " + rest_id) // 更新列表
+        }
+    }
+    function send() {
+        let myorder = category + "select " + input.value;
+        socket.send(myorder);
+        input.value = "";
+    }
+    function showall() {
+        let myorder = category + "select all_class";
+        socket.send(myorder);
+    }
+    function cleartable(tb) {
+        var rowNum = tb.rows.length;
+        for (i = 0; i < rowNum; i++) {
+            tb.deleteRow(i);
+            rowNum = rowNum - 1;
+            i = i - 1;
+        }
+    }
+    function filltable_with_orderbtn(table, heads, per) {
+        var headtr = document.createElement("tr");
+        for (var j = 0; j < heads.length; j++) {
+            var th = document.createElement("th");
+            var headtt = document.createTextNode(heads[j])
+            th.append(headtt)
+            headtr.append(th)
+        }
+
+        table.append(headtr)
+
+        for (var i = 0; i < per.length - 1; i++) {
+            var tr = document.createElement("tr");
+            //表单内容建立
+            var words = per[i].split("+")
+            for (var j = 0; j < words.length; j++) {
+                var td = document.createElement("td");
+                var nowtxt = words[j]
+                var tt = document.createTextNode(nowtxt)
+                td.appendChild(tt);
+                tr.appendChild(td);
+            }
+            //添加订餐按钮
+
+            C = tr.insertCell()
+            C.innerHTML = "<button class='blue' onclick='changename(this)'   >更改名称</button>"
+            C2 = tr.insertCell()
+            C2.innerHTML = "<button class='orange' onclick='changeprice(this)'  >更改价格</button>"
+            C3 = tr.insertCell()
+            C3.innerHTML = "<button class='red' onclick='delthisrow(this)'  >删除</button>"
+
+            table.appendChild(tr);
+        }
+        table.setAttribute("border", 1);
+    }
+    function changename(element) {
+        var index = element.parentElement.parentElement.rowIndex
+        var data = getTableContent("shopfoodtable")
+        var orgname = data[index][1]
+        var thisfid = data[index][0]
+        newname = prompt("将套餐名称由" + orgname + "更改为?")
+        socket.send("food changename " + newname + " " + thisfid)
+
+        socket.send("restaurant foodlist " + rest_id) // 更新列表
+    }
+    function changeprice(element) {
+        var index = element.parentElement.parentElement.rowIndex
+        var data = getTableContent("shopfoodtable")
+        var orgname = data[index][1]
+        var orgprice = data[index][2]
+        var thisfid = data[index][0]
+        newprice = prompt("将" + orgname + "价格由" + orgprice + "更改为?")
+        socket.send("food changeprice " + newprice + " " + thisfid)
+        socket.send("restaurant foodlist " + rest_id) // 更新列表
+    }
+    function delthisrow(element) {
+        var index = element.parentElement.parentElement.rowIndex
+        var data = getTableContent("shopfoodtable")
+        var thisfid = data[index][0]
+        socket.send("food delete " + thisfid)
+        socket.send("restaurant foodlist " + rest_id) // 更新列表
+    }
+    function getTableContent(id) {
+        var mytable = document.getElementById(id);
+        var data = [];
+        for (var i = 0, rows = mytable.rows.length; i < rows; i++) {
+            for (var j = 0, cells = mytable.rows[i].cells.length; j < cells; j++) {
+                if (!data[i]) {
+                    data[i] = new Array();
+                }
+                data[i][j] = mytable.rows[i].cells[j].innerHTML;
+            }
+        }
+        return data;
+    }
+
+</script>

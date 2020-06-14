@@ -1,0 +1,224 @@
+<head>
+    <meta charset="utf-8">
+    <title>简易外卖骑手中心</title>
+    <link href="styles/style.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+
+    </style>
+
+</head>
+
+<h1>
+    简易外卖骑手中心
+</h1>
+<h2>
+    <button onclick="login()">登录</button>
+    <button onclick="newrider()">注册</button>
+
+    <pre id="output"></pre>
+</h2>
+
+<body>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <h4>骑手信息</h4>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <table border="0" cellspacing="0" cellpadding="0" id="sendertable" align="center" width="80%" class="table">
+
+    </table>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <h4>
+        我接的单
+    </h4>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <table border="0" cellspacing="0" cellpadding="0" id="ongoingtable" align="center" width="80%" class="table">
+
+    </table>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <h4>
+        可以接的单
+        <input id="input" type="text" />
+        <button onclick="send()">搜索</button>
+        <button onclick="showall()">显示全部</button>
+        <button onclick="delfinished()">删除已完成订单</button>
+    </h4>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+    <table border="0" cellspacing="0" cellpadding="0" id="tbcain" align="center" width="80%" class="table">
+
+    </table>
+    <HR style=" border: 1 dashed #e8e4ec" width="80%" color=#e8e4ec cb 9 SIZE=1>
+</body>
+
+<script>
+    var serverip = "192.168.123.143"
+    var input = document.getElementById("input");
+    var output = document.getElementById("output");
+    var socket = new WebSocket("ws://" + serverip + ":8080/echo");
+    var timename = setInterval("flushpage();", 5000);
+    var sender_id = ""
+    var pass = false
+    const category = "sender "
+    socket.onopen = function () {
+        //output.innerHTML += "Status: Connected\n";
+        var myorder = "sender select all";
+        socket.send(myorder);
+    };
+
+    socket.onmessage = function (acc) {
+        //output.innerHTML += "Server: " + e.data + "\n";
+        var splitter = acc.data.split("|")
+        var e = splitter[1]
+        var optional = splitter[0]
+        if (optional == "sender_select") {
+            var per = e.split("\n")
+            var table = document.getElementById("tbcain");
+            var heads = new Array("单号", "商家地址", "商家名字", "商家电话", "顾客地址", "顾客姓名", "顾客电话", "套餐", "价格", "接单")
+            cleartable(table)
+            filltable_withpick(table, heads, per)
+        }
+        if (optional == "sender_search") {
+            var per = e.split("\n")
+            if (per == "") {
+                pass = false
+            }
+            else {
+                pass = true
+                var table = document.getElementById("sendertable");
+                var heads = new Array("名字", "余额", "VIP", "骑手ID")
+                cleartable(table)
+                filltable(table, heads, per)
+                socket.send("sender ongoing " + sender_id)
+            }
+        }
+        if (optional == "sender_ongoing") {
+            var per = e.split("\n")
+            var table = document.getElementById("ongoingtable");
+            var heads = new Array("单号", "商家地址", "商家名字", "商家电话", "顾客地址", "顾客姓名", "顾客电话", "套餐", "价格", "评价")
+            cleartable(table)
+            filltable(table, heads, per)
+        }
+    }
+    function delfinished() {
+        if (pass == true) {
+            socket.send("sender clfinish " + sender_id)
+            socket.send("sender ongoing " + sender_id)
+        }
+    }
+    function login() {
+        sender_id = prompt("请输入你的骑手id")
+        socket.send("sender search " + sender_id);
+    }
+    function flushpage() {
+
+        if (pass == true) {
+            socket.send("sender search " + sender_id);
+            socket.send("sender select all");
+        }
+    }
+    function filltable(table, heads, per) {
+        var headtr = document.createElement("tr");
+        for (var j = 0; j < heads.length; j++) {
+            var th = document.createElement("th");
+            var headtt = document.createTextNode(heads[j])
+            th.append(headtt)
+            headtr.append(th)
+        }
+
+        table.append(headtr)
+
+        for (var i = 0; i < per.length - 1; i++) {
+            var tr = document.createElement("tr");
+
+            var words = per[i].split("+")
+            for (var j = 0; j < words.length; j++) {
+                var td = document.createElement("td");
+                var nowtxt = words[j]
+                var tt = document.createTextNode(nowtxt)
+                td.appendChild(tt);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        table.setAttribute("border", 1);
+    }
+    function filltable_withpick(table, heads, per) {
+        var headtr = document.createElement("tr");
+        for (var j = 0; j < heads.length; j++) {
+            var th = document.createElement("th");
+            var headtt = document.createTextNode(heads[j])
+            th.append(headtt)
+            headtr.append(th)
+        }
+
+        table.append(headtr)
+
+        for (var i = 0; i < per.length - 1; i++) {
+            var tr = document.createElement("tr");
+
+            var words = per[i].split("+")
+            for (var j = 0; j < words.length; j++) {
+                var td = document.createElement("td");
+                var nowtxt = words[j]
+                var tt = document.createTextNode(nowtxt)
+                td.appendChild(tt);
+                tr.appendChild(td);
+            }
+            C = tr.insertCell()
+            C.innerHTML = "<button class='orange' onclick='pick_this_food(this)' >接单</button>"
+            table.appendChild(tr);
+        }
+        table.setAttribute("border", 1);
+    }
+    function send() {
+        let myorder = "sender select " + input.value;
+        socket.send(myorder);
+        input.value = "";
+    }
+    function showall() {
+        let myorder = "sender select all";
+        socket.send(myorder);
+    }
+    function newrider() {
+        //newsid string, newname string, newphone string, newaid string
+        newsid = prompt("请注册一个骑手ID")
+        newname = prompt("输入你的名字")
+        newphone = prompt("请输入你的联系电话")
+        newaid = prompt("请输入你关联的账号")
+        socket.send("sender new " + newsid + " " + newname + " " + newphone + " " + newaid)
+        alert("注册完成! 输入" + newsid + "来进行登录")
+    }
+    function pick_this_food(element) {
+        if (pass == false) {
+            alert("您还没有登录,还想送外卖???")
+            return
+        }
+        var tb = document.getElementById("tbcain");
+        var data = getTableContent("tbcain")
+        foodid = data[element.parentElement.parentElement.rowIndex][0]
+        //alert("sender pick " + foodid + " " + sender_id)
+        socket.send("sender pick " + foodid + " " + sender_id)
+        socket.send("sender ongoing " + sender_id)
+        socket.send("sender select all");
+    }
+    function getTableContent(id) {
+        var mytable = document.getElementById(id);
+        var data = [];
+        for (var i = 0, rows = mytable.rows.length; i < rows; i++) {
+            for (var j = 0, cells = mytable.rows[i].cells.length; j < cells; j++) {
+                if (!data[i]) {
+                    data[i] = new Array();
+                }
+                data[i][j] = mytable.rows[i].cells[j].innerHTML;
+            }
+        }
+        return data;
+    }
+    function cleartable(tb) {
+        var rowNum = tb.rows.length;
+        for (i = 0; i < rowNum; i++) {
+            tb.deleteRow(i);
+            rowNum = rowNum - 1;
+            i = i - 1;
+        }
+    }
+
+</script>

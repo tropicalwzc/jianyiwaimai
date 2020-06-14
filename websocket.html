@@ -1,0 +1,36 @@
+<head>
+    <meta charset="utf-8">
+    <title>简易外卖主页</title>
+    <link href="static/styles/style.css" rel="stylesheet" type="text/css">
+</head>
+<h1>
+    简易外卖
+</h1>
+<HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+<h1>
+    <button class="large" onclick="jumptocustomer()">点餐</button>
+    <button class="large" onclick="jumptosender()">骑手</button>
+    <button class="large" onclick="jumptoshop()">店家</button>
+</h1>
+<HR style=" border: 1 dashed #e8e4ec" width="60%" color=#e8e4ec cb 9 SIZE=1>
+<pre id="output"></pre>
+
+<h4>
+    Copyright @ 2019 王子诚.
+</h4>
+<script>
+
+    function jumptocustomer() {
+        page = "static/customer.html"
+        setTimeout("javascript:location.href='" + page + "'", 100);
+    }
+    function jumptosender() {
+        page = "static/senders.html"
+        setTimeout("javascript:location.href='" + page + "'", 100);
+    }
+    function jumptoshop() {
+        page = "static/account.html"
+        setTimeout("javascript:location.href='" + page + "'", 100);
+    }
+
+</script>

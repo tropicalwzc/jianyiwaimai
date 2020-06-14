@@ -1,0 +1,217 @@
+html {
+    font-size: 20px;
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    background-color: rgb(248, 248, 248);
+}
+  
+body {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    width: "100%";
+    margin: 0 auto;
+    background-image: linear-gradient(to bottom , rgb(194, 200, 216), rgb(201, 190, 144));
+    padding: 0 20px 20px 20px;
+    border: 0px solid rgb(211, 211, 211);
+}
+  
+h1 {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 60px;
+    text-align: center;
+    font-weight: lighter;
+    margin: 0;
+    color: rgb(45, 47, 49);
+}
+
+h2 {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 27px;
+    font-weight: lighter;
+    text-align: center;
+    margin: 0;
+    padding: 0px 0;
+    color: rgb(37, 34, 34);
+}
+h3 {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 23px;
+    font-weight: lighter;
+    margin: 0;
+    color: rgb(38, 38, 38);
+}
+h4 {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 17px;
+    font-weight: lighter;
+    text-align: center;
+    margin: 0;
+    color: rgb(71, 77, 85);
+}
+h5 {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 14px;
+    text-align: right;
+    margin: 0;
+    color: rgb(122, 129, 138);
+}
+p, li {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    letter-spacing: 1px;
+}
+  
+img {
+    display: block;
+    margin: 0 auto;
+    border-style: center;
+}
+
+a{
+    font-size: 30px;
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+    color: rgb(66, 75, 83);
+    margin: 0 auto;
+    background-color: rgb(248, 248, 248);
+    padding: 1px 0;
+    text-shadow: 3px 3px 3px rgb(211, 211, 211);
+}
+input{
+    color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 14pt;
+    outline: none;
+}
+button {
+    color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 14pt;
+    outline: none;
+}
+button:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;   
+}
+button.blue {
+    color: white;
+    background: #4C8FFB;
+    border: 1px #3079ED solid;
+    box-shadow: inset 0 1px 0 #80B0FB;
+}
+
+button.blue:hover {
+    border: 1px #2F5BB7 solid;
+    box-shadow: 0 1px 1px #EAEAEA, inset 0 1px 0 #5A94F1;
+    background: #3F83F1;
+}
+
+button.blue:active {
+    box-shadow: inset 0 2px 5px #2370FE;   
+}
+
+/* Orange button as seen on blogger.com*/
+button.orange {
+    color: white;
+    border: 1px solid #FB8F3D; 
+    background: -webkit-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -moz-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -ms-linear-gradient(top, #FDA251, #FB8F3D);
+}
+
+button.orange:hover {
+    border: 1px solid #EB5200;
+    background: -webkit-linear-gradient(top, #FD924C, #F9760B); 
+    background: -moz-linear-gradient(top, #FD924C, #F9760B); 
+    background: -ms-linear-gradient(top, #FD924C, #F9760B); 
+    box-shadow: 0 1px #EFEFEF;
+}
+
+button.orange:active {
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
+}
+
+/* Red Google Button as seen on drive.google.com */
+button.red {
+    background: -webkit-linear-gradient(top, #DD4B39, #D14836); 
+    background: -moz-linear-gradient(top, #DD4B39, #D14836); 
+    background: -ms-linear-gradient(top, #DD4B39, #D14836); 
+    border: 1px solid #DD4B39;
+    color: white;
+    text-shadow: 0 1px 0 #C04131;
+}
+
+button.red:hover {
+     background: -webkit-linear-gradient(top, #DD4B39, #C53727);
+     background: -moz-linear-gradient(top, #DD4B39, #C53727);
+     background: -ms-linear-gradient(top, #DD4B39, #C53727);
+     border: 1px solid #AF301F;
+}
+
+button.red:active {
+     box-shadow: inset 0 1px 1px rgba(0,0,0,0.2);
+    background: -webkit-linear-gradient(top, #D74736, #AD2719);
+    background: -moz-linear-gradient(top, #D74736, #AD2719);
+    background: -ms-linear-gradient(top, #D74736, #AD2719);
+}
+
+button.large {
+    color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: 100;
+    text-align: center;
+    font-size: 40pt;
+    outline: none;
+}
+button.large:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button.large:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;   
+}
+
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center;
+}
+
+table td,
+table th {
+    border: 1px solid #cad9ea;
+    color: #666;
+    height: 30px;
+}
+
+table thead th {
+    background-color: #CCE8EB;
+    width: 100px;
+}
+
+table tr:nth-child(odd) {
+    background: #fff;
+}
+
+table tr:nth-child(even) {
+    background: #F5FAFA;
+}
