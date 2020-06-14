@@ -1,0 +1,9 @@
+USE waimai;
+CREATE TABLE Restaurant(
+			rid VARCHAR(10) NOT NULL UNIQUE,
+			raddr VARCHAR(50) NOT NULL,
+			rphone VARCHAR(15) NOT NULL,
+			rname VARCHAR(30) NOT NULL,
+			aid VARCHAR(10) NOT NULL,
+			PRIMARY KEY(rid),
+			FOREIGN KEY (aid) REFERENCES Account ON DELETE NO ACTION);
